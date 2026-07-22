@@ -55,12 +55,15 @@ scoped to only the failed items, not the whole batch.
 | Single payout by mode | TC-008–010 |
 | Status tracking | TC-011 |
 | Commercial/GST | TC-013–016 |
-| Bulk Payout | Candidate for expansion — see below |
-| Beneficiary Update/Delete | Candidate for expansion — see below |
+| Bulk Payout partial-failure & scoped retry | TC-026–028, derived from [`business-flow.md`](./business-flow.md) |
+| Beneficiary Update/Delete | TC-022–025 |
+| Retry idempotency (no double-pay) | TC-029–031 |
+| Transfer-mode-specific limits & isolation (IMPS/NEFT/RTGS) | TC-032–037 |
 
 ## Future Test Coverage (Not Yet in `test-cases/`)
 
-- Bulk Payout partial-failure handling (per-item status, scoped retry)
-- Beneficiary Update — does editing an approved beneficiary require re-approval?
-- Beneficiary Delete — what happens to payout history referencing a deleted beneficiary?
-- Retry Service — idempotency (does a retry ever create a duplicate transfer?)
+- Automating the newly-documented manual test cases (TC-022–037) — currently manual only; Retry
+  idempotency and Bulk Payout partial-failure are the next priority tier given their
+  financial-risk profile (see the note in `test-cases/regression-checklist.md` section 7)
+- End-to-end chained regression test combining Beneficiary → Approval → Bulk Payout → Retry into
+  a single continuous journey, rather than testing each in isolation

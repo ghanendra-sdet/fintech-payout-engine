@@ -119,29 +119,45 @@ coverage across beneficiary management and the full transfer lifecycle.
 
 ## 🔄 How It Works — Business Flow
 
+> This section covers the internal QA/regression view (the screens a merchant navigates). For
+> the full **end-to-end business flow** — including a detailed flow for each transfer mode
+> (IMPS, NEFT, RTGS), the beneficiary lifecycle, bulk payout, retry idempotency, and settlement —
+> see [`docs/business-flow.md`](./docs/business-flow.md).
+
 ### Merchant Regression Flow (highest-priority end-to-end scenario)
+
+This is the single highest-priority path through the system. Each arrow below is annotated with
+what's actually being validated at that step.
 
 ```
 Login
-  │
+  │  authenticates the merchant session
   ▼
 Dashboard
-  │
+  │  summary tiles must match live beneficiary/payout data
   ▼
-Beneficiary
-  │
+Beneficiary ──▶ Create · Update · Delete
+  │             a beneficiary is USELESS until it clears Verification + Approval —
+  │             see docs/business-flow.md for the full lifecycle
   ▼
 Approval
-  │
+  │  permission gate — only admin/ops can approve; payouts must re-check
+  │  approval status at execution time, not just at selection time
   ▼
-Payout
-  │
+Payout ──▶ IMPS · NEFT · RTGS · Single · Bulk
+  │         each transfer mode has independent limits and cut-off behavior;
+  │         Bulk Payout must report per-item status, not just a batch result
   ▼
 Status
-  │
+  │  must correctly represent long-lived PROCESSING states (esp. NEFT),
+  │  and Retry must never risk a duplicate transfer
   ▼
 Reports
+     exported totals must match Status + Ledger data byte-for-byte
 ```
+
+> For the service-level view of what's running behind each step above, see
+> [`docs/service-architecture.md`](./docs/service-architecture.md).
 
 ### Supported Transfer Modes
 
@@ -176,6 +192,13 @@ The Payout Engine conceptually interacts with:
 
 ## 🏆 Key Achievements
 
+- Owned QA coverage across Payout Engine's **~38-service architecture** — including a 5-service
+  beneficiary lifecycle (Creation, Update, Delete, Approval, Verification), 3 independent
+  transfer-mode services (IMPS, NEFT, RTGS), and dedicated commercial/ledger/reporting services
+  (see [Service Architecture](./docs/service-architecture.md) for the full breakdown)
+- Designed integration test coverage across the highest-financial-risk service boundary in the
+  module — Retry Service idempotency — ensuring a retried transfer can never duplicate a payout
+  that already succeeded on the bank side
 - Built and maintained an automated regression suite in Playwright/TypeScript covering the full
   merchant payout journey (Login → Reports)
 - Designed a beneficiary-approval-focused test strategy that treated permission and approval
@@ -249,9 +272,11 @@ payout-engine/
 ├── README.md                     → This file
 ├── docs/
 │   ├── business-overview.md      → What Payout Engine is, glossary, cross-module map
-│   ├── architecture-and-flow.md  → Detailed merchant/admin flow diagrams
+│   ├── architecture-and-flow.md  → Internal QA/regression flow diagrams (dashboard, admin, states)
+│   ├── business-flow.md          → End-to-end flow per transfer mode, beneficiary lifecycle, bulk/retry, settlement
 │   ├── feature-modules.md        → Full feature/screen inventory (Beneficiary, Modes, Bulk Payout, Reports)
-│   └── service-architecture.md   → Microservice-level decomposition & integration test boundaries
+│   ├── service-architecture.md   → Microservice-level decomposition & integration test boundaries
+│   └── shared-platform-services.md → Company-wide services this product depends on (Auth, GST/Ledger/Reconciliation Engines, etc.)
 ├── test-cases/
 │   └── regression-checklist.md   → Full regression suite + edge cases
 ├── automation/
