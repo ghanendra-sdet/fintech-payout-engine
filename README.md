@@ -1,4 +1,4 @@
-# 💸 Payout Engine
+# 💸 Fintech Payout Engine
 
 **An outbound merchant fund-transfer platform — QA & Automation Portfolio Project**
 
@@ -249,7 +249,9 @@ payout-engine/
 ├── README.md                     → This file
 ├── docs/
 │   ├── business-overview.md      → What Payout Engine is, glossary, cross-module map
-│   └── architecture-and-flow.md  → Detailed merchant/admin flow diagrams
+│   ├── architecture-and-flow.md  → Detailed merchant/admin flow diagrams
+│   ├── feature-modules.md        → Full feature/screen inventory (Beneficiary, Modes, Bulk Payout, Reports)
+│   └── service-architecture.md   → Microservice-level decomposition & integration test boundaries
 ├── test-cases/
 │   └── regression-checklist.md   → Full regression suite + edge cases
 ├── automation/
