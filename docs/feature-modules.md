@@ -50,7 +50,7 @@ scoped to only the failed items, not the whole batch.
 
 | Feature Area | Covered in |
 |---|---|
-| Beneficiary create/duplicate/invalid | [`test-cases/regression-checklist.md`](../test-cases/regression-checklist.md) TC-002–004 |
+| Beneficiary create/duplicate/invalid | [`regression-checklist.md`](../regression-checklist.md) TC-002–004 |
 | Approval flow | TC-005–007 |
 | Single payout by mode | TC-008–010 |
 | Status tracking | TC-011 |
@@ -59,11 +59,12 @@ scoped to only the failed items, not the whole batch.
 | Beneficiary Update/Delete | TC-022–025 |
 | Retry idempotency (no double-pay) | TC-029–031 |
 | Transfer-mode-specific limits & isolation (IMPS/NEFT/RTGS) | TC-032–037 |
+| Cross-screen UI consistency | TC-062–067, see [`ui-consistency.md`](./ui-consistency.md) |
 
-## Future Test Coverage (Not Yet in `test-cases/`)
+## Future Test Coverage (Not Yet in `regression-checklist.md`)
 
 - Automating the newly-documented manual test cases (TC-022–037) — currently manual only; Retry
   idempotency and Bulk Payout partial-failure are the next priority tier given their
-  financial-risk profile (see the note in `test-cases/regression-checklist.md` section 7)
+  financial-risk profile (see the note in [`../regression-checklist.md`](../regression-checklist.md) section 8)
 - End-to-end chained regression test combining Beneficiary → Approval → Bulk Payout → Retry into
   a single continuous journey, rather than testing each in isolation

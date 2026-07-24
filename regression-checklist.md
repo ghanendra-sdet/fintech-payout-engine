@@ -21,8 +21,8 @@
 
 ## 2. Beneficiary Lifecycle — Update, Delete, Bulk & Retry
 
-> Closes the gaps flagged in [`docs/feature-modules.md`](../docs/feature-modules.md) — derived
-> from [`docs/business-flow.md`](../docs/business-flow.md).
+> Closes the gaps flagged in [`docs/feature-modules.md`](./docs/feature-modules.md) — derived
+> from [`docs/business-flow.md`](./docs/business-flow.md).
 
 ### Beneficiary Update & Delete
 
@@ -96,7 +96,21 @@
 | TC-020 | Empty search results | 1. Search payout status with filters matching nothing | "No results found" message, no error |
 | TC-021 | Invalid filter combination | 1. Apply an end date earlier than start date | Validation error, search blocked |
 
-## 6. Full Regression Checklist
+## 6. UI Consistency
+
+> Derived from [`docs/ui-consistency.md`](./docs/ui-consistency.md) — cross-screen consistency,
+> not single-screen correctness.
+
+| ID | Scenario | Steps | Expected Result |
+|---|---|---|---|
+| TC-062 | Status badge distinct: Pending Approval vs. Failed | 1. Put one dummy beneficiary in Pending Approval and one payout in Failed 2. Compare badges | Visually and textually distinct — never overlapping colors/labels |
+| TC-063 | Bulk batch summary never collapses mixed outcomes to binary | 1. Run a bulk payout with 8 successes and 2 failures 2. View the batch summary | Shows "8/10 Succeeded" or equivalent, never a single Success/Failed badge |
+| TC-064 | Currency formatting consistency | 1. View the same payout amount on Dashboard, Beneficiary list, Status, and an exported Report | Decimal places, thousands separator, and ₹ placement match exactly everywhere |
+| TC-065 | Fee vs. gross amount always clearly labeled | 1. View a payout with a commercial fee applied on any screen | Transfer amount and fee are unambiguously distinguished, never merged into one figure |
+| TC-066 | "Beneficiary not approved" error wording matches across UI and API | 1. Trigger the error via the UI 2. Trigger the same error via a direct API call | Identical error message/wording in both cases |
+| TC-067 | Status badges distinguishable without color | 1. View Success/Failed/Pending Approval/Rejected badges with color/grayscale rendering simulated | Each remains distinguishable via icon/text label alone |
+
+## 7. Full Regression Checklist
 
 - [ ] Login
 - [ ] Dashboard
@@ -114,8 +128,9 @@
 - [ ] GST Calculation
 - [ ] Ledger Entries
 - [ ] Permissions / Role-Based Access
+- [ ] UI Consistency (status badges, batch summaries, formatting, terminology, accessibility)
 
-## 7. Priority Automation Candidates
+## 8. Priority Automation Candidates
 
 1. Login
 2. Dashboard
@@ -126,6 +141,6 @@
 7. Reports
 
 These are automated first because they form the primary merchant regression path and are run on
-every release — see [`automation/`](../automation) for the Playwright implementation. Retry
+every release — see [`automation/`](./automation) for the Playwright implementation. Retry
 idempotency (TC-029–031) and Bulk Payout partial-failure (TC-026–028) are the next priority tier
 given their financial-risk profile, currently documented as manual test cases only.

@@ -1,7 +1,9 @@
 # Sample Defect Report — Payout Engine
 
 > Template + worked examples using dummy data. Reflects recurring defect themes in Payout
-> regression.
+> regression. Several defects below map to flows in [`docs/business-flow.md`](./docs/business-flow.md)
+> and integration boundaries in [`docs/service-architecture.md`](./docs/service-architecture.md)
+> — see [`docs/README.md`](./docs/README.md) for the full documentation map.
 
 ## Defect Theme Taxonomy
 

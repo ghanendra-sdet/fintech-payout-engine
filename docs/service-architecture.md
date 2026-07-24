@@ -93,5 +93,5 @@ verify this isolation explicitly, not just assume it.
 |---|---|
 | Beneficiary Creation → Verification → Approval | A beneficiary cannot reach "Approved" without passing Verification first |
 | Approval Service → Payout Services | Payout Services must re-check approval status at execution time, not just at selection time |
-| Transfer Mode Service → Commercial Calculation Service | Each mode's fee is calculated using that specific mode, never a cached "last used mode" (see [`bug-reports/`](../bug-reports)) |
+| Transfer Mode Service → Commercial Calculation Service | Each mode's fee is calculated using that specific mode, never a cached "last used mode" (see [`bug-reports/`](../sample-defect-report.md)) |
 | Bulk Payout Service → Payout Status Service | Partial batch failures report per-item status, not just an overall batch status |

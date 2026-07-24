@@ -269,4 +269,4 @@ real-world path money can take on the way out?"* The highest-value, hardest-to-f
 this module live in the branches documented above: an approval bypass, a mode-isolation leak, a
 bulk-batch partial failure reported incorrectly, or — the single most dangerous case — a retry
 that creates a duplicate transfer. These are the primary source for the edge cases in
-[`test-cases/regression-checklist.md`](../test-cases/regression-checklist.md).
+[`test-cases/regression-checklist.md`](../regression-checklist.md).

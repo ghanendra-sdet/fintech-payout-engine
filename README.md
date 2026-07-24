@@ -10,6 +10,10 @@
 > All content here uses **generic/sample data only**. No client names, company names, or
 > confidential/production information are included. Dates and timelines are placeholders —
 > update `[Timeline]` before publishing.
+>
+> 📍 **New here?** [`docs/README.md`](./docs/README.md) is a documentation map answering "what is
+> this, how does it work, who's involved, what does it depend on" — with a recommended reading
+> order through every doc in this repo.
 
 ---
 
@@ -25,6 +29,10 @@
 8. [Regression Checklist](#-regression-checklist)
 9. [Screenshots & Reports](#-screenshots--reports)
 10. [Repository Structure](#-repository-structure)
+
+> Deeper dives not covered inline in this README: [Stakeholders & Dependencies](./docs/business-overview.md),
+> [Service Architecture](./docs/service-architecture.md), [Shared Platform Services](./docs/shared-platform-services.md),
+> [UI Consistency](./docs/ui-consistency.md) — see [`docs/README.md`](./docs/README.md) for the full map.
 
 ---
 
@@ -253,45 +261,55 @@ data.
 - [ ] GST Calculation
 - [ ] Ledger Entries
 - [ ] Permissions / Role-Based Access
+- [ ] UI Consistency (status badges, batch summaries, formatting, terminology, accessibility)
 
-Full checklist with edge cases available in [`test-cases/`](./test-cases).
+Full checklist with edge cases available in [`regression-checklist.md`](./regression-checklist.md).
 
 ---
 
 ## 📸 Screenshots & Reports
 
-Sample test execution reports and defect report templates are available under
-[`test-reports/`](./test-reports) and [`bug-reports/`](./bug-reports).
+Sample test execution reports and defect report templates are available in
+[`regression-execution-summary.md`](./regression-execution-summary.md) and
+[`sample-defect-report.md`](./sample-defect-report.md).
 
 ---
 
 ## 📁 Repository Structure
 
+> **New here?** Start with [`docs/README.md`](./docs/README.md) — a documentation map that
+> answers "what is this, how does it work, who's involved, what does it depend on" and points to
+> exactly the right doc for each question, in recommended reading order.
+
 ```
-payout-engine/
-├── README.md                     → This file
+fintech-payout-engine/
+├── README.md                        → This file
+├── regression-checklist.md          → Full regression suite + edge cases (67 test cases)
+├── sample-defect-report.md          → Defect theme taxonomy + worked defect examples
+├── regression-execution-summary.md  → Sample regression test execution report
 ├── docs/
-│   ├── business-overview.md      → What Payout Engine is, glossary, cross-module map
-│   ├── architecture-and-flow.md  → Internal QA/regression flow diagrams (dashboard, admin, states)
-│   ├── business-flow.md          → End-to-end flow per transfer mode, beneficiary lifecycle, bulk/retry, settlement
-│   ├── feature-modules.md        → Full feature/screen inventory (Beneficiary, Modes, Bulk Payout, Reports)
-│   ├── service-architecture.md   → Microservice-level decomposition & integration test boundaries
-│   └── shared-platform-services.md → Company-wide services this product depends on (Auth, GST/Ledger/Reconciliation Engines, etc.)
-├── test-cases/
-│   └── regression-checklist.md   → Full regression suite + edge cases
-├── automation/
-│   ├── README.md                 → Framework setup & structure
-│   └── sample-payout.spec.ts     → Sample Playwright + TypeScript test (dummy data)
-├── bug-reports/
-│   └── sample-defect-report.md   → Defect report template with dummy example
-└── test-reports/
-    └── regression-execution-summary.md → Sample regression test execution report
+│   ├── README.md                    → 📍 Documentation map — start here
+│   ├── business-overview.md         → What Payout Engine is, stakeholders, dependencies, glossary
+│   ├── architecture-and-flow.md     → Internal QA/regression flow diagrams (dashboard, admin, states)
+│   ├── business-flow.md             → End-to-end flow per transfer mode, beneficiary lifecycle, bulk/retry, settlement
+│   ├── feature-modules.md           → Full feature/screen inventory (Beneficiary, Modes, Bulk Payout, Reports)
+│   ├── service-architecture.md      → Microservice-level decomposition & integration test boundaries
+│   ├── shared-platform-services.md  → Company-wide services this product depends on (Auth, GST/Ledger/Reconciliation Engines, etc.)
+│   └── ui-consistency.md            → Cross-screen UI/UX consistency (status badges, batch summaries, formatting, a11y)
+└── automation/
+    ├── README.md                    → Framework setup & structure
+    └── sample-payout.spec.ts        → Sample Playwright + TypeScript test (dummy data)
 ```
+
+> **Note on structure:** `bug-reports/`, `test-cases/`, and `test-reports/` were originally
+> separate folders, each holding a single file — flattened to the repo root since a folder
+> holding exactly one file adds navigation overhead without organizing anything. `docs/` and
+> `automation/` remain folders because each genuinely groups multiple related files.
 
 ## 🤖 Support & Dispute Resolution
 
 Payout issues (stuck transfers, disputes, account detail changes) are handled by the shared
 [AI Dispute Resolution Engine](https://github.com/ghanendra-sdet/ai-dispute-resolution-engine) —
-a single AI-powered support layer common across Collection, Payout, Connected Banking, BBPS, and
-YOBO. It resolves ~80% of issues without human involvement, cutting average ticket resolution
+a single AI-powered support layer common across Collection, Payout, Connected Banking, BBPS,
+Reseller, and YOBO. It resolves ~80% of issues without human involvement, cutting average ticket resolution
 time from a 24–72 hour baseline to under 6 hours.

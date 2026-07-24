@@ -94,4 +94,4 @@ When scoping regression for a change to any shared service, ask: *which other pr
 depend on this service?* A change to the shared Reconciliation Engine, in particular, is
 worth extra scrutiny given how directly Payout's Retry-idempotency safety depends on it being
 correct — a regression there could silently reintroduce the "double-pay" risk documented in
-[`bug-reports/`](../bug-reports), even if nothing in Payout's own codebase changed.
+[`bug-reports/`](../sample-defect-report.md), even if nothing in Payout's own codebase changed.

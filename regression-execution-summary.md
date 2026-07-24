@@ -41,3 +41,7 @@ The regression cycle surfaced one critical defect related to API-level approval 
 major commercial-calculation defect. Both were prioritized for fix-and-retest before sign-off,
 consistent with this module's testing priority order: **beneficiary safety and financial
 correctness first**.
+
+**See also:** [`docs/business-overview.md`](./docs/business-overview.md) section 6 for why
+beneficiary safety is prioritized this way, and [`sample-defect-report.md`](./sample-defect-report.md)
+for the full worked defect examples.

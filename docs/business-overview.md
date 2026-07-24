@@ -2,7 +2,8 @@
 
 > **Start here if you're new to fintech QA, in HR, or from a non-QA technical role.** This
 > document explains what a Payout Engine does and why it matters, before you look at any test
-> case or code.
+> case or code. See [`README.md`](./README.md) for the full documentation map if you landed here
+> directly.
 
 ## 1. What problem does it solve?
 
@@ -76,7 +77,37 @@ This is why:
 - Permission and role-based access checks around who can approve a beneficiary or authorize a
   payout are treated as core regression scenarios, not edge cases
 
-## 7. Cross-Module Dependencies
+## 7. Involved Parties (Stakeholders)
+
+Beyond Merchant/Admin (section 4), a Payout Engine at enterprise scale involves:
+
+| Stakeholder | Why They Care |
+|---|---|
+| **Merchants** | Need reliable, correctly-priced fund disbursement to their own vendors/employees |
+| **Beneficiaries** | The end recipients — never interact with the platform directly, but are the ones harmed by a misdirected or duplicate payout |
+| **Merchant Admins** | Manage beneficiaries and approve payouts on the merchant's behalf |
+| **Finance Team** | Owns commercial accuracy, GST compliance, and ledger correctness across all three transfer modes |
+| **Operations Team** | Monitors payout health, bulk-batch outcomes, and Retry escalations |
+| **Banks** | The actual settlement rails (IMPS/NEFT/RTGS) — payout success ultimately depends on their availability and response accuracy |
+| **Compliance Team** | Cares about beneficiary verification rigor and audit trail completeness |
+
+## 8. Dependencies
+
+**This product's own internal services** — see [`service-architecture.md`](./service-architecture.md)
+for the full ~38-service breakdown (beneficiary lifecycle, transfer-mode services, commercial/
+GST, reporting).
+
+**Shared, company-wide platform services** — see [`shared-platform-services.md`](./shared-platform-services.md)
+for the engines Payout Engine consumes rather than reimplements: Authentication, Merchant
+Onboarding, Commercial/GST/Ledger/Reconciliation Engines, Audit Logs, Notification Service.
+
+**External, third-party dependencies:**
+
+- **Banking Networks** — IMPS Network, NEFT Network, RTGS Network
+- **SMS / Email Services** — payout status and beneficiary approval notifications
+- **KYC Verification** — beneficiary identity/account validation (upstream of approval)
+
+## 9. Cross-Module Dependencies (Conceptual, Within the Platform)
 
 The Payout Engine conceptually depends on / interacts with:
 
@@ -85,5 +116,9 @@ The Payout Engine conceptually depends on / interacts with:
 - **Admin Portal** — for configuration and beneficiary approval
 - **Ledger & Commercial Engine** — for fee calculation and audit trail
 - **Reports** — for merchant and internal analytics
+- **AI Dispute Resolution Engine** — handles merchant support issues raised about payout status,
+  as part of the shared cross-product support layer
 
-See [`architecture-and-flow.md`](./architecture-and-flow.md) for the detailed flow diagrams.
+See [`architecture-and-flow.md`](./architecture-and-flow.md) for the detailed flow diagrams, and
+[`ui-consistency.md`](./ui-consistency.md) for how this data must render consistently across
+every screen it appears on.

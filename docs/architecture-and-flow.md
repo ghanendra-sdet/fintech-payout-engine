@@ -1,5 +1,10 @@
 # Payout Engine — Architecture & Flow
 
+> This is the internal, system-level "Tech Flow" view. For the merchant/beneficiary-facing
+> journey, see [`business-flow.md`](./business-flow.md). For the service-level (microservice)
+> view behind these diagrams, see [`service-architecture.md`](./service-architecture.md). See
+> [`README.md`](./README.md) for the full documentation map.
+
 ## Merchant Regression Flow (Primary End-to-End Scenario)
 
 ```
@@ -134,3 +139,7 @@ Every step depends on state built by the previous one:
 This is why the Payout regression suite (manual and automated) walks the full path in order,
 with particular emphasis on the beneficiary → approval boundary, since it's the step with the
 least room for error.
+
+**See also:** [`ui-consistency.md`](./ui-consistency.md) for how these same steps must render
+consistently across screens; the concrete test cases derived from this flow live in
+[`../regression-checklist.md`](../regression-checklist.md).
