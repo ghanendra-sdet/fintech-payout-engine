@@ -31,8 +31,12 @@
 10. [Repository Structure](#-repository-structure)
 
 > Deeper dives not covered inline in this README: [Stakeholders & Dependencies](./docs/business-overview.md),
+> [Architecture, Flow & Real Sequence Diagrams](./docs/architecture-and-flow.md),
+> [Full Tech Stack & Skills Demonstrated](./docs/tech-and-skills.md),
 > [Service Architecture](./docs/service-architecture.md), [Shared Platform Services](./docs/shared-platform-services.md),
-> [UI Consistency](./docs/ui-consistency.md) — see [`docs/README.md`](./docs/README.md) for the full map.
+> [UI Consistency](./docs/ui-consistency.md) — see [`docs/README.md`](./docs/README.md) for the
+> full map. **Every diagram in this repo is drawn in Mermaid and renders natively right here on
+> GitHub — nothing requires visiting another site.**
 
 ---
 
@@ -104,10 +108,13 @@ coverage across beneficiary management and the full transfer lifecycle.
 | **UI Automation** | Playwright, TypeScript, Page Object Model |
 | **API Testing** | Playwright API requests, Postman |
 | **Test Runner & Reporting** | Playwright Test Runner, built-in HTML Reports |
-| **Performance Testing** | JMeter |
+| **Performance Testing** | JMeter (bulk-batch throughput, retry-queue load under concurrency) |
 | **CI/CD** | Jenkins / GitHub Actions |
-| **Bug Tracking** | JIRA |
+| **Bug Tracking & Traceability** | JIRA, RTM (Requirement Traceability Matrix — see [`sample-rtm.md`](./sample-rtm.md)) |
 | **Version Control** | Git, GitHub |
+
+> Full detail on *why* each tool was chosen, a skill → proof map, and the performance testing
+> approach in depth: [`docs/tech-and-skills.md`](./docs/tech-and-skills.md).
 
 ---
 
@@ -137,32 +144,20 @@ coverage across beneficiary management and the full transfer lifecycle.
 This is the single highest-priority path through the system. Each arrow below is annotated with
 what's actually being validated at that step.
 
+```mermaid
+flowchart TD
+    A["Login<br/>authenticates the merchant session"] --> B["Dashboard<br/>summary tiles must match live beneficiary/payout data"]
+    B --> C["Beneficiary -> Create / Update / Delete<br/>USELESS until it clears Verification + Approval"]
+    C --> D["Approval<br/>permission gate — payouts must re-check status at execution time,<br/>not just at selection time"]
+    D --> E["Payout -> IMPS / NEFT / RTGS / Single / Bulk<br/>Bulk Payout must report per-item status, not just a batch result"]
+    E --> F["Status<br/>must represent long-lived PROCESSING states correctly;<br/>Retry must never risk a duplicate transfer"]
+    F --> G["Reports<br/>exported totals must match Status + Ledger data byte-for-byte"]
 ```
-Login
-  │  authenticates the merchant session
-  ▼
-Dashboard
-  │  summary tiles must match live beneficiary/payout data
-  ▼
-Beneficiary ──▶ Create · Update · Delete
-  │             a beneficiary is USELESS until it clears Verification + Approval —
-  │             see docs/business-flow.md for the full lifecycle
-  ▼
-Approval
-  │  permission gate — only admin/ops can approve; payouts must re-check
-  │  approval status at execution time, not just at selection time
-  ▼
-Payout ──▶ IMPS · NEFT · RTGS · Single · Bulk
-  │         each transfer mode has independent limits and cut-off behavior;
-  │         Bulk Payout must report per-item status, not just a batch result
-  ▼
-Status
-  │  must correctly represent long-lived PROCESSING states (esp. NEFT),
-  │  and Retry must never risk a duplicate transfer
-  ▼
-Reports
-     exported totals must match Status + Ledger data byte-for-byte
-```
+
+See [`docs/business-flow.md`](./docs/business-flow.md) for the full beneficiary lifecycle, and
+[`docs/architecture-and-flow.md`](./docs/architecture-and-flow.md) for the full set of Mermaid
+sequence diagrams — including exactly how an approval-bypass or duplicate-retry defect actually
+happens under the hood.
 
 > For the service-level view of what's running behind each step above, see
 > [`docs/service-architecture.md`](./docs/service-architecture.md).
@@ -269,9 +264,9 @@ Full checklist with edge cases available in [`regression-checklist.md`](./regres
 
 ## 📸 Screenshots & Reports
 
-Sample test execution reports and defect report templates are available in
-[`regression-execution-summary.md`](./regression-execution-summary.md) and
-[`sample-defect-report.md`](./sample-defect-report.md).
+Sample test execution reports, defect report templates, and a worked Requirement Traceability
+Matrix are available in [`regression-execution-summary.md`](./regression-execution-summary.md),
+[`sample-defect-report.md`](./sample-defect-report.md), and [`sample-rtm.md`](./sample-rtm.md).
 
 ---
 
@@ -287,12 +282,15 @@ fintech-payout-engine/
 ├── regression-checklist.md          → Full regression suite + edge cases (67 test cases)
 ├── sample-defect-report.md          → Defect theme taxonomy + worked defect examples
 ├── regression-execution-summary.md  → Sample regression test execution report
+├── sample-rtm.md                    → Worked Requirement Traceability Matrix, including real coverage gaps
 ├── docs/
 │   ├── README.md                    → 📍 Documentation map — start here
 │   ├── business-overview.md         → What Payout Engine is, stakeholders, dependencies, glossary
-│   ├── architecture-and-flow.md     → Internal QA/regression flow diagrams (dashboard, admin, states)
+│   ├── architecture-and-flow.md     → Real Mermaid state machines, admin flow, and the exact mechanism
+│   │                                    behind three real defects (approval bypass, stale mode, duplicate retry)
 │   ├── business-flow.md             → End-to-end flow per transfer mode, beneficiary lifecycle, bulk/retry, settlement
 │   ├── feature-modules.md           → Full feature/screen inventory (Beneficiary, Modes, Bulk Payout, Reports)
+│   ├── tech-and-skills.md           → Skill → proof index, with real performance-testing depth
 │   ├── service-architecture.md      → Microservice-level decomposition & integration test boundaries
 │   ├── shared-platform-services.md  → Company-wide services this product depends on (Auth, GST/Ledger/Reconciliation Engines, etc.)
 │   └── ui-consistency.md            → Cross-screen UI/UX consistency (status badges, batch summaries, formatting, a11y)
