@@ -45,7 +45,9 @@ enforced in the UI must also be enforced at the API layer.
 
 **Actual Result**
 The API accepts the request and the payout proceeds to processing, bypassing the approval gate
-entirely. The UI correctly blocks this same action, but the API does not.
+entirely. The UI correctly blocks this same action, but the API does not. See
+[`docs/architecture-and-flow.md`](./docs/architecture-and-flow.md) for this exact mechanism shown
+as a flowchart.
 
 **Impact**
 This is the highest-severity class of defect for this module: funds can be sent to an
@@ -112,7 +114,9 @@ original transfer actually succeeded, Retry should detect this and refuse to res
 
 **Actual Result**
 Retry resubmits unconditionally based on the platform's local `FAILED` status, without
-re-checking with the bank. The beneficiary receives the amount twice.
+re-checking with the bank. The beneficiary receives the amount twice. See
+[`docs/architecture-and-flow.md`](./docs/architecture-and-flow.md) for this exact mechanism
+shown as a sequence diagram.
 
 **Impact**
 This is the single most severe defect class in the Payout Engine — real money is sent twice to
