@@ -5,7 +5,9 @@ Automation for the Payout Engine's primary merchant regression path, built with
 
 > Automated scenarios trace directly to [`../regression-checklist.md`](../regression-checklist.md)
 > and the flow diagrams in [`../docs/architecture-and-flow.md`](../docs/architecture-and-flow.md).
-> See [`../docs/README.md`](../docs/README.md) for the full documentation map.
+> See [`../docs/README.md`](../docs/README.md) for the full documentation map and
+> [`../docs/tech-and-skills.md`](../docs/tech-and-skills.md) for why this stack was chosen and the
+> full performance-testing approach (bulk-batch throughput, retry-queue load).
 
 ## Why Playwright + TypeScript
 
