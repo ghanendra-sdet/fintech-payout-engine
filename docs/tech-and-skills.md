@@ -6,8 +6,7 @@
 > feature-modules, service-architecture) — it doesn't duplicate that content, it cross-references
 > it by *skill* rather than by *product flow*, which none of those other docs do. Section 5 below
 > also gives the performance-testing approach the depth the tech stack table claims (JMeter) but
-> no dedicated report yet demonstrates — unlike this portfolio's Collection Engine repo, which has
-> a real executed load test.
+> no dedicated report yet demonstrates with a fully executed run.
 
 ## 1. Full Tech Stack, and Why Each Tool
 
@@ -24,7 +23,7 @@
 
 | Skill | Demonstrated By | Where to Look |
 |---|---|---|
-| **Manual / Functional Testing** | Full Login-to-Reports regression suite (67 cases) | [`../regression-checklist.md`](../regression-checklist.md) |
+| **Manual / Functional Testing** | Full Login-to-Reports regression suite (43 cases) | [`../regression-checklist.md`](../regression-checklist.md) |
 | **API Testing** | Payout payloads, approval-status enforcement, commercial/GST calculation | [`../regression-checklist.md`](../regression-checklist.md) |
 | **UI Automation** | Playwright + POM spec covering the highest-priority merchant journey | [`../automation/sample-payout.spec.ts`](../automation/sample-payout.spec.ts) |
 | **Security-Adjacent Defense-in-Depth Testing** | A dedicated test category confirming the approval check holds at the API layer independently of the UI | [`../sample-defect-report.md`](../sample-defect-report.md) Defect #1; [`architecture-and-flow.md`](./architecture-and-flow.md) |
@@ -40,11 +39,16 @@
 
 ```mermaid
 flowchart TD
-    UNIT["Unit Tests<br/>(owned by the application dev team — out of this QA scope)"]
-    API["API Tests<br/>approval enforcement, commercial/GST, status/retry contracts"]
-    UI["UI / E2E Tests<br/>Playwright — Login -> Beneficiary -> Approval -> Payout -> Status -> Reports"]
-    PERF["Performance Tests<br/>JMeter — bulk-batch throughput, retry-queue load"]
+    UNIT["⚙️ Unit Tests<br/>(owned by the application dev team — out of this QA scope)"]
+    API["🔌 API Tests<br/>approval enforcement, commercial/GST, status/retry contracts"]
+    UI["🖥️ UI / E2E Tests<br/>Playwright — Login -> Beneficiary -> Approval -> Payout -> Status -> Reports"]
+    PERF["📈 Performance Tests<br/>JMeter — bulk-batch throughput, retry-queue load"]
     UNIT --> API --> UI --> PERF
+
+    classDef service fill:#004d40,stroke:#26a69a,color:#fff
+    classDef neutral fill:#37474f,stroke:#90a4ae,color:#fff
+    class UNIT neutral
+    class API,UI,PERF service
 ```
 
 ## 4. CI/CD — Suggested Pipeline Shape
@@ -55,12 +59,21 @@ flowchart TD
 
 ```mermaid
 flowchart LR
-    PR["Pull Request opened"] --> API["API suite<br/>(approval enforcement, commercial/GST, retry contracts)"]
-    API --> UI["Playwright UI suite<br/>(Login -> ... -> Reports)"]
-    UI --> Gate{"All required checks pass?"}
-    Gate -->|Yes| Merge["Merge allowed"]
-    Gate -->|No| Block["Merge blocked — failure surfaced on the PR"]
-    Merge --> Nightly["Nightly: JMeter bulk-batch + retry-load run<br/>(too slow/expensive for per-PR gating)"]
+    PR["🔀 Pull Request opened"] --> API["🔌 API suite<br/>(approval enforcement, commercial/GST, retry contracts)"]
+    API --> UI["🖥️ Playwright UI suite<br/>(Login -> ... -> Reports)"]
+    UI --> Gate{"🛂 All required checks pass?"}
+    Gate -->|Yes| Merge["✅ Merge allowed"]
+    Gate -->|No| Block["❌ Merge blocked — failure surfaced on the PR"]
+    Merge --> Nightly["🌙 Nightly: JMeter bulk-batch + retry-load run<br/>(too slow/expensive for per-PR gating)"]
+
+    classDef service fill:#004d40,stroke:#26a69a,color:#fff
+    classDef gate fill:#4a148c,stroke:#ab47bc,color:#fff
+    classDef good fill:#1b5e20,stroke:#43a047,color:#fff
+    classDef bad fill:#b71c1c,stroke:#e53935,color:#fff
+    class PR,API,UI,Nightly service
+    class Gate gate
+    class Merge good
+    class Block bad
 ```
 
 ## 5. Performance Testing, In Depth
