@@ -18,6 +18,11 @@ const DUMMY_BENEFICIARY = {
   ifsc: 'DEMO0005678',
 };
 
+const DUMMY_ADMIN = {
+  id: 'DEMOADMIN001',
+  password: 'Dummy@AdminPass1',
+};
+
 // ── Page Objects ─────────────────────────────────────────────────
 class LoginPage {
   constructor(private page: Page) { }
@@ -49,6 +54,10 @@ class BeneficiaryPage {
 
   async getApprovalStatusText() {
     return this.page.getByTestId('beneficiary-status').innerText();
+  }
+
+  async approveBeneficiary(name: string) {
+    await this.page.getByRole('row', { name }).getByRole('button', { name: 'Approve' }).click();
   }
 }
 
@@ -126,13 +135,20 @@ test.describe('Payout Engine — Primary Regression Flow', () => {
 
   test('RTGS payout below the minimum amount is rejected', async ({ page }) => {
     const login = new LoginPage(page);
+    const beneficiary = new BeneficiaryPage(page);
     const payout = new PayoutPage(page);
+
+    // This test validates an amount-boundary rule, not the approval gate, so the beneficiary
+    // must actually be approved first rather than assumed to be.
+    await login.goto();
+    await login.loginAs(DUMMY_ADMIN.id, DUMMY_ADMIN.password);
+    await beneficiary.goto();
+    await beneficiary.approveBeneficiary(DUMMY_BENEFICIARY.name);
 
     await login.goto();
     await login.loginAs(DUMMY_MERCHANT.id, DUMMY_MERCHANT.password);
 
     await payout.goto();
-    // Assumes an already-approved dummy beneficiary exists in test data
     await payout.initiatePayout(DUMMY_BENEFICIARY.name, '50', 'RTGS');
 
     await expect(payout.getErrorMessage()).resolves.toMatch(/minimum/i);
