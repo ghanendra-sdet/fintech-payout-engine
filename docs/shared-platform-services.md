@@ -6,7 +6,7 @@
 > from the ~38 services enumerated in [`service-architecture.md`](./service-architecture.md)
 > that belong to Payout Engine specifically.
 
-## Why "Shared Platform" Matters for Testing
+## One Shared Engine, Every Product's Problem
 
 A defect in a shared service doesn't stay contained to one product. A bug in the company-wide
 **Ledger Engine**, for example, doesn't just affect Payout's ledger entries — it silently
@@ -77,7 +77,7 @@ whichever product initiated the change.
 | Product | Approx. Services |
 |---|---|
 | Collection | 38 |
-| Payout | 35 |
+| Payout | 38 |
 | Connected Banking | 28 |
 | Shared Platform | 28 |
 
@@ -94,4 +94,4 @@ When scoping regression for a change to any shared service, ask: *which other pr
 depend on this service?* A change to the shared Reconciliation Engine, in particular, is
 worth extra scrutiny given how directly Payout's Retry-idempotency safety depends on it being
 correct — a regression there could silently reintroduce the "double-pay" risk documented in
-[`bug-reports/`](../sample-defect-report.md), even if nothing in Payout's own codebase changed.
+[`sample-defect-report.md`](../sample-defect-report.md), even if nothing in Payout's own codebase changed.
