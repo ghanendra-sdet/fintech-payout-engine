@@ -29,6 +29,7 @@
 8. [Regression Checklist](#-regression-checklist)
 9. [Screenshots & Reports](#-screenshots--reports)
 10. [Repository Structure](#-repository-structure)
+11. [Support & Dispute Resolution](#-support--dispute-resolution)
 
 > Deeper dives not covered inline in this README: [Stakeholders & Dependencies](./docs/business-overview.md),
 > [Architecture, Flow & Real Sequence Diagrams](./docs/architecture-and-flow.md),
@@ -146,12 +147,20 @@ what's actually being validated at that step.
 
 ```mermaid
 flowchart TD
-    A["Login<br/>authenticates the merchant session"] --> B["Dashboard<br/>summary tiles must match live beneficiary/payout data"]
-    B --> C["Beneficiary -> Create / Update / Delete<br/>USELESS until it clears Verification + Approval"]
-    C --> D["Approval<br/>permission gate — payouts must re-check status at execution time,<br/>not just at selection time"]
-    D --> E["Payout -> IMPS / NEFT / RTGS / Single / Bulk<br/>Bulk Payout must report per-item status, not just a batch result"]
-    E --> F["Status<br/>must represent long-lived PROCESSING states correctly;<br/>Retry must never risk a duplicate transfer"]
-    F --> G["Reports<br/>exported totals must match Status + Ledger data byte-for-byte"]
+    A["🔑 Login<br/>authenticates the merchant session"] --> B["📊 Dashboard<br/>summary tiles must match live beneficiary/payout data"]
+    B --> C["👤 Beneficiary -> Create / Update / Delete<br/>USELESS until it clears Verification + Approval"]
+    C --> D["🛂 Approval<br/>permission gate — payouts must re-check status at execution time,<br/>not just at selection time"]
+    D --> E["💸 Payout -> IMPS / NEFT / RTGS / Single / Bulk<br/>Bulk Payout must report per-item status, not just a batch result"]
+    E --> F["📡 Status<br/>must represent long-lived PROCESSING states correctly;<br/>Retry must never risk a duplicate transfer"]
+    F --> G["📄 Reports<br/>exported totals must match Status + Ledger data byte-for-byte"]
+
+    classDef service fill:#004d40,stroke:#26a69a,color:#fff
+    classDef gate fill:#4a148c,stroke:#ab47bc,color:#fff
+    classDef person fill:#1a237e,stroke:#5c6bc0,color:#fff
+    class A,B,F,G service
+    class C person
+    class D gate
+    class E service
 ```
 
 See [`docs/business-flow.md`](./docs/business-flow.md) for the full beneficiary lifecycle, and
@@ -279,7 +288,7 @@ Matrix are available in [`regression-execution-summary.md`](./regression-executi
 ```
 fintech-payout-engine/
 ├── README.md                        → This file
-├── regression-checklist.md          → Full regression suite + edge cases (67 test cases)
+├── regression-checklist.md          → Full regression suite + edge cases (43 test cases)
 ├── sample-defect-report.md          → Defect theme taxonomy + worked defect examples
 ├── regression-execution-summary.md  → Sample regression test execution report
 ├── sample-rtm.md                    → Worked Requirement Traceability Matrix, including real coverage gaps
@@ -307,7 +316,7 @@ fintech-payout-engine/
 ## 🤖 Support & Dispute Resolution
 
 Payout issues (stuck transfers, disputes, account detail changes) are handled by the shared
-[AI Dispute Resolution Engine](https://github.com/ghanendra-sdet/ai-dispute-resolution-engine) —
+<a href="https://github.com/ghanendra-sdet/ai-dispute-resolution-engine" target="_blank" rel="noopener noreferrer">AI Dispute Resolution Engine</a> —
 a single AI-powered support layer common across Collection, Payout, Connected Banking, BBPS,
 Reseller, and YOBO. It resolves ~80% of issues without human involvement, cutting average ticket resolution
 time from a 24–72 hour baseline to under 6 hours.
