@@ -5,7 +5,7 @@
 > covers whether it's represented **consistently** across all of them — a distinct testing
 > dimension from whether any single screen is individually correct.
 
-## Why This Matters More Here Than in Most Modules
+## The Highest-Stakes UI Distinction in This Product
 
 Payout Engine already carries the platform's highest financial risk (see
 [`business-overview.md`](./business-overview.md) section 6 — a misdirected or duplicated payout
